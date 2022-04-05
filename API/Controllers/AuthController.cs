@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using API.Dtos;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -54,10 +55,11 @@ public class AuthController : Controller
     {
         List<Claim> claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.Username)
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, "Admin"),
         };
 
-        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
             _configuration.GetSection("Identity:Token").Value));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
